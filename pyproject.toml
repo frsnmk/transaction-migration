@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "transaction"
+version = "0.1.0"
+description = ""
+authors = ["frsnmk <razedman@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^1.5.3"
+selenium = "^4.7.2"
+openpyxl = "^3.0.10"
+python-dotenv = "^0.21.1"
+fuzzywuzzy = "^0.18.0"
+mysql-connector-python = "^8.0.32"
+python-levenshtein = "^0.20.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
