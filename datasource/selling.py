@@ -23,6 +23,5 @@ class Selling:
             'Kuantum' : lambda x:list(x),
             'Piutang' : lambda x:list(x)
         }).reset_index()
-        df.to_excel('output.xlsx')
         return df
         
