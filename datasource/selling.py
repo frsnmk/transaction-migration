@@ -11,7 +11,8 @@ class Selling:
         df['Nomor'].loc[df['Nomor'].isnull() & (df['Pelanggan']=='PENJUALAN TUNAI - DP')] = 'Uncode' # Mengisi yang tidak memiliki nomor transaksi dengna nomor transaksi 'Uncode'
         
         # Mengisi field yang kosong, berdasarkan nilai field dari row yang sebelumnya
-        df['Tanggal'].fillna(method='ffill', inplace=True) 
+        df['Tanggal'].fillna(method='ffill', inplace=True)
+        df['Tanggal'] = df['Tanggal'].dt.strftime('%Y-%m-%d %H:%M')
         df['Nomor'].fillna(method='ffill', inplace=True)
         df['Pelanggan'].fillna(method='ffill', inplace=True)
 
