@@ -11,11 +11,14 @@ class Transaction:
 
         self.driver = webdriver.Chrome(options=self.options)
         self.wait = WebDriverWait(self.driver, 30)
-        self.driver.get('http://localhost:8000')
-
-    def login(self):
+        self.driver.get("http://localhost:8000/login")
         username_el = self.driver.find_element(by=By.NAME, value="username")
         username_el.send_keys("admin")
         password_el = self.driver.find_element(by=By.NAME, value="password")
         password_el.send_keys("password")
         password_el.send_keys(Keys.ENTER)
+
+
+    def close(self):
+        self.driver.close()
+
