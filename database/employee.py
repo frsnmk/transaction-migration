@@ -9,7 +9,7 @@ class Employee:
         res = cur.fetchall()
         return res
     
-    def fetch_all_name(self):
+    def fetch_all_name(self) ->list[str]:
         conn = Koperasi.create_connection()
         cur = conn.cursor(dictionary=True)
         sql = '''SELECT * FROM employees'''

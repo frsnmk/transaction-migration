@@ -39,3 +39,16 @@ def find_barcode_by_item_name(selected_item, items):
 def nama_anggota(text):
     text = text.split('-')
     return text[1].strip()
+
+
+def supplier_name_adjustment(supplier):
+    if supplier == 'Yans Mart':
+        return 'Yan Mart'
+    elif supplier == 'BP.YAYAN':
+        return 'Yan Mart'
+    elif supplier == 'BP.YAYAN(klanting)':
+        return 'Yan Mart'
+    elif supplier == 'DAFMART':
+        return 'Yan Mart'
+    else:
+        raise "Data tidak supplier tidak tersedia"
