@@ -18,7 +18,7 @@ class Purchase:
 
         # Mengisi field yang kosong, berdasarkan nilai field dari row yang sebelumnya
         df['Tanggal'].fillna(method='ffill', inplace=True)
-
+        df['Tanggal'] = df['Tanggal'].dt.strftime('%Y-%m-%d %H:%M')
         # Menghapus row yang nilai kolom suplayernya kosong
         df = df.drop(df[df['Suplayer'].isnull()].index)
 
