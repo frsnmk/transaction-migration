@@ -1,11 +1,4 @@
 import pandas as pd
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-path = os.getenv('LAPORAN_KEUANGAN_PATH')
-
 class Purchase:
 
     def __init__(self, path:str, columns:list = ['Tanggal', 'Nomor', 'Bahan Baku', 'Suplayer', 'Harga', 'Kuantum', 'Total']):
