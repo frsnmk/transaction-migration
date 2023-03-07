@@ -37,7 +37,8 @@ def find_barcode_by_item_name(selected_item, items):
         return -1
 
 def nama_anggota(text):
-    text = text.split('-')
+    if text.__contains__('-'):
+        text = text.split('-')
     return text[1].strip()
 
 
