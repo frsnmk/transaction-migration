@@ -16,4 +16,5 @@ class PPOB:
 
         # Menghapus row yang nilai Jenis Transaksiya kosong
         df = df.drop(df[df['Jenis Transaksi'].isnull()].index)
+        df['Kategori Transaksi'] = 'PPOB'
         return df

@@ -28,13 +28,13 @@ purchases = Purchase(path).data_pembelian()
 ppob =  PPOB(path).data_ppob()
 
 merged_data = pd.concat([sellings, purchases, ppob])
-mergerd_data = merged_data.sort_values('Tanggal', ascending=True)
+merged_data = merged_data.sort_values('Tanggal', ascending=True)
 bot = Transaction()
 
-for i, row in merged_data.iterrows():
-    if isinstance(row['Pelanggan'], str):
+for i, row in ppob.iterrows():
+    if row['Kategori Transaksi'] == 'Penjualan':
         SellingTransaction(bot.driver, bot.wait).selling_transaction(row['Tanggal'], row['Nomor'], most_similar_word(nama_anggota(row['Pelanggan']), employees_name, 65), row['Jenis Barang'], row['Harga'], row['Kuantum'], items)
-    if isinstance(row['Suplayer'], str):
+    if row['Kategori Transaksi'] == 'Pembelian':
         PurchaseTransaction(bot.driver, bot.wait).purchase_transaction(supplier_name_adjustment(row['Suplayer']), pd.to_datetime(row['Tanggal']).strftime('%d-%m-%Y'), row['Bahan Baku'], row['Harga'], row['Kuantum'], items)
-    if isinstance(row['Jenis Transaksi'], str):
+    if row['Kategori Transaksi'] == 'PPOB':
         PPOBTransaction(bot.driver, bot.wait).ppob_transaction(row['Tanggal'], row['Nomor'], row['Jenis Pembayaran'], row['Jenis Transaksi'], row['Jumlah Tagihan'], row['Admin'], row['Total Pembayaran'])

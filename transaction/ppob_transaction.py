@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
-from transaction.helper import find_barcode_by_item_name
+import pandas as pd
 
 class PPOBTransaction:
     def __init__(self, driver, wait):
@@ -57,7 +57,7 @@ class PPOBTransaction:
         quantities_el = self.driver.find_element(By.ID, 'qty')
         quantities_el.send_keys(1)
         quantities_el.send_keys(Keys.ENTER)
-
+        admin_fee = 0 if pd.isna(admin_fee) else admin_fee
         self.driver.find_element(By.ID, 'adminFee').send_keys(int(admin_fee))
 
         if pelanggan == 'tunai':
