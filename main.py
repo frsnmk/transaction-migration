@@ -14,6 +14,7 @@ from transaction.helper import most_similar_word, nama_anggota, supplier_name_ad
 from transaction.transaction import Transaction
 from transaction.selling_transaction import SellingTransaction
 from transaction.purchase_transaction import PurchaseTransaction
+from transaction.ppob_transaction import PPOBTransaction
 
 load_dotenv()
 
@@ -36,6 +37,4 @@ for i, row in merged_data.iterrows():
     if isinstance(row['Suplayer'], str):
         PurchaseTransaction(bot.driver, bot.wait).purchase_transaction(supplier_name_adjustment(row['Suplayer']), pd.to_datetime(row['Tanggal']).strftime('%d-%m-%Y'), row['Bahan Baku'], row['Harga'], row['Kuantum'], items)
     if isinstance(row['Jenis Transaksi'], str):
-        SellingTransaction(bot.driver, bot.wait).selling_transaction(row['Tanggal'], row['Nomor'], row['Jenis Pembayaran'], row['Jenis Barang'], row['Harga'], row['Kuantum'], items, is_ppob=True)
-        input('Press any key ...')
-        bot.close()
+        PPOBTransaction(bot.driver, bot.wait).ppob_transaction(row['Tanggal'], row['Nomor'], row['Jenis Pembayaran'], row['Jenis Transaksi'], row['Jumlah Tagihan'], row['Admin'], row['Total Pembayaran'])

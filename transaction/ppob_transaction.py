@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 
 from transaction.helper import find_barcode_by_item_name
 
-class SellingTransaction:
+class PPOBTransaction:
     def __init__(self, driver, wait):
         '''driver: Driver chrome yang akan dijalankan
         wait: Object untuk explisit wait
@@ -12,8 +12,11 @@ class SellingTransaction:
         self.driver = driver
         self.wait = wait
 
-    def selling_transaction(self, tanggal, invoice_number:str, pelanggan:str, purchased_items:list, prices:list, quantities:list, items:list):
+    def ppob_transaction(self, tanggal, invoice_number:str, pelanggan:str, jenis_transaksi:str, price:int, admin_fee:int, total_payment:str):
         self.driver.get('http://localhost:8000/transaction/create')
+
+        # TOGGLE PPOB
+        self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[3]/section/div[2]/div/div[1]/div/div[2]/div[1]/div[1]/div/label/span[1]').click()
 
         # INPUT DATA TANGGAL
         transaction_date_el = self.driver.find_element(By.ID, 'transaction_date') # mendapatkan element tanggal
@@ -32,8 +35,8 @@ class SellingTransaction:
         invoice_number_el.clear() # menghapus nilai ada (yang digenerate otomatis oleh sistem)
         self.driver.execute_script(f"document.getElementById('invoice_number').value='{invoice_number}'") # mengisinya dengan nilai yang kita inginkan
 
-        # INPUT DATA ANGGOTA (JIKA ADA)
-        if pelanggan:
+        # Pilih pelanggan
+        if pelanggan and pelanggan!= 'tunai':
             self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[3]/section/div[2]/div/div[1]/div/div[2]/div[3]/span/span[1]/span').click() # click element yang akan mentrigger text input muncul
             search_input_el = self.wait.until(
                 EC.presence_of_element_located(
@@ -47,40 +50,19 @@ class SellingTransaction:
                 )
             ).click() # menunggu element menampilkan nama yang sesuai dengan nama pelanggan di dropdown dan kemudian mengkliknya
         
-        # INPUT DATA BARANG
-        for purchased_item, price, quantity in zip(purchased_items, prices, quantities):
-            barcode = find_barcode_by_item_name(purchased_item, items)
-            barcode_el = self.driver.find_element(By.ID, 'barcode') # mengambil element yang memiliki id 'barcode'
-            barcode_el.send_keys(barcode) # mengetikan nama barang pada barcode_el
-            barcode_el.send_keys(Keys.ENTER) # mengetikan tombol enter
-            self.wait.until(
-                EC.text_to_be_present_in_element_value(
-                    (By.ID, 'code'),
-                    ''
-                )
-            )
+        self.driver.find_element(By.ID, 'name').send_keys(jenis_transaksi) # memasukan nama pembalian yang dilakukan
+        
+        self.driver.find_element(By.ID, 'price').send_keys(int(price))
 
-            price_el = self.driver.find_element(By.ID, 'price')
-            self.driver.execute_script("arguments[0].removeAttribute('disabled')", price_el) # menghilangkan disable pada field tanggal
-            self.wait.until(
-                EC.text_to_be_present_in_element_value(
-                    (By.ID, 'price'),
-                    'Rp. '
-                )
-            )
-            price_el.clear()
-            price_el.send_keys(int(price))
+        quantities_el = self.driver.find_element(By.ID, 'qty')
+        quantities_el.send_keys(1)
+        quantities_el.send_keys(Keys.ENTER)
 
-            qty_el = self.driver.find_element(By.ID, 'qty')
-            qty_el.send_keys(quantity) # mengetikan enter
-            qty_el.send_keys(Keys.ENTER) # mengetikan enter
+        self.driver.find_element(By.ID, 'adminFee').send_keys(int(admin_fee))
 
-        # INPUT DATA BAYAR JIKA DIA TUNAI
-        if pelanggan.__contains__('Tunai'):
-            grand_total  = self.driver.find_element(By.ID, 'grandTotal').get_attribute('value')
-            print(grand_total)
+        if pelanggan == 'tunai':
             cash_el = self.driver.find_element(By.ID, 'cash')
-            cash_el.send_keys(grand_total)
+            cash_el.send_keys(int(total_payment))
         
         self.driver.find_element(By.ID, 'save').click()
 
