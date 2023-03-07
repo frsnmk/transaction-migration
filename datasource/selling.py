@@ -23,5 +23,6 @@ class Selling:
             'Kuantum' : lambda x:list(x),
             'Piutang' : lambda x:list(x)
         }).reset_index()
+        df['Kategori Transaksi'] = 'Penjualan'
         return df
         

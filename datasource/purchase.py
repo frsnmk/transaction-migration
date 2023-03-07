@@ -23,4 +23,5 @@ class Purchase:
             'Kuantum': lambda x: list(x),
             'Total': lambda x: list(x),
         }).reset_index()
+        df['Kategori Transaksi'] = 'Pembelian'
         return df
