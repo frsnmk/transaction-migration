@@ -46,3 +46,42 @@ for i, row in bank_in.iterrows():
             BankInTransaction(bot.driver, bot.wait).non_division_account(row['Keterangan'], row['Nama Anggota'], int(row['Pemasukan Lain-lain']), "Pemasukan Bunga Rekening BRI", row['Tanggal'])
         if not pd.isna(row['Angsuran Gudang']):
             BankInTransaction(bot.driver, bot.wait).angsuran(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Angsuran Gudang']), "Pinjaman karyawan Feedmill", row['Tanggal'])
+        if not pd.isna(row['Angsuran Farm']):
+            BankInTransaction(bot.driver, bot.wait).angsuran(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Angsuran Farm']), "Pinjaman karyawan Farm", row['Tanggal'])
+        if(not pd.isna(row['Angsuran Security'])):
+            BankInTransaction(bot.driver, bot.wait).angsuran(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Angsuran Security']), "Pinjaman karyawan Security dan Pupuk", row['Tanggal'])
+        if(not pd.isna(row['Angsuran CAM'])):
+            BankInTransaction(bot.driver, bot.wait).angsuran(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Angsuran CAM']), "Pinjaman karyawan CAM", row['Tanggal'])
+        if(not pd.isna(row['Angsuran PWM'])):
+            BankInTransaction(bot.driver, bot.wait).angsuran(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Angsuran PWM']), "Pinjaman karyawan PWM", row['Tanggal'])
+        if(not pd.isna(row['Angsuran PMP'])):
+            BankInTransaction(bot.driver, bot.wait).angsuran(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Angsuran PMP']), "Pinjaman karyawan PMP", row['Tanggal'])
+        
+        if(not pd.isna(row['Simpanan Gudang'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Gudang']), "Simpanan wajib dan sukarela karyawan Gudang", row['Tanggal'])
+        if(not pd.isna(row['Simpanan Farm'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Farm']), "Simpanan wajib dan sukarela karyawan Farm", row['Tanggal'])
+        if(not pd.isna(row['Simpanan Security'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Security']), "Simpanan wajib dan sukarela karyawan Security", row['Tanggal'])
+        if(not pd.isna(row['Simpanan CAM'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan CAM']), "Simpanan wajib dan sukarela karyawan CAM", row['Tanggal'])
+        if(not pd.isna(row['Simpanan PWM'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan PWM']), "Simpanan wajib dan sukarela karyawan PWM", row['Tanggal'])
+        if(not pd.isna(row['Simpanan PMP'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan PMP']), "Simpanan wajib dan sukarela karyawan PMP", row['Tanggal'])
+
+        if(not pd.isna(row['Simpanan Pokok Gudang'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Pokok Gudang']), "Simpanan pokok karyawan gudang", row['Tanggal'])
+        if(not pd.isna(row['Simpanan Pokok Farm'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Pokok Farm']), "Simpanan pokok karyawan farm", row['Tanggal'])
+        if(not pd.isna(row['Simpanan Pokok Security'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Pokok Security']), "Simpanan pokok karyawan security", row['Tanggal'])
+        if(not pd.isna(row['Simpanan Pokok CAM'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Pokok CAM']), "Simpanan pokok karyawan cam", row['Tanggal'])
+        if(not pd.isna(row['Simpanan Pokok PWM'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Pokok PWM']), "Simpanan pokok karyawan pwm", row['Tanggal'])
+        if(not pd.isna(row['Simpanan Pokok PMP'])):
+            BankInTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Simpanan Pokok PMP']), "Simpanan pokok karyawan pmp", row['Tanggal'])
+
+    if row['Kategori Transaksi'] == 'Kas Masuk':
+        
