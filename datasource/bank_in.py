@@ -1,5 +1,10 @@
 import pandas as pd
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+path = os.getenv('LAPORAN_KEUANGAN_PATH')
 class BankIn:
 
     def __init__(self, path:str, columns:list = [
@@ -16,16 +21,17 @@ class BankIn:
 
     
     def data_bank_in(self):
-        df = pd.read_excel(self.path, sheet_name='Bank-BRI', names=self.column, skiprows=8, nrows=407, usecols='Z:BG')
+        df = pd.read_excel(self.path, sheet_name='Bank-BRI', names=self.columns, skiprows=8, nrows=407, usecols='Z:BG')
         # Memfilter row menjadi kolom yang mempunyai nomor saja
         df = df[df['Nomor'].notna()]
 
         # Mengisi tanggal yang kosong berdasarkan tanggal pada row sebelumnya
         df['Tanggal'].fillna(method='ffill', inplace=True)
-
+        df['Tanggal'] = df['Tanggal'].dt.strftime('%Y-%m-%d %H:%M')
         # Menyamakan jumlah dan urutan kolom yang ada pada bank in ke kas in
         df = df.drop('Pengalihan Kas', axis=1) # Menghapus kolom pengalihan kas pada bank in. (Karena akan dilakukan secara otomatis oleh bank out transaction)
 
         lain2_column = df.pop('Lain-lain') # mengambil kolom lain-lain
         df['Pemasukan Lain-lain'] = lain2_column # memasukan kembali kolom lain-lain keurutan paling belakang
+        df['Kategori Transaksi'] = 'Bank Masuk'
         return df
