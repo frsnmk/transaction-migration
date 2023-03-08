@@ -1,5 +1,8 @@
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+import pandas as pd
+import os
+import re
 
 def most_similar_word(word:str, words:list, limit_score=70):
     '''word : Kata yang ingin dicari kemiripannya
@@ -53,3 +56,17 @@ def supplier_name_adjustment(supplier):
         return 'Yan Mart'
     else:
         raise "Data tidak supplier tidak tersedia"
+
+def find_employe_name_by_code(text):
+    columns = [
+        'Divisi', 'Nama', 'NIK', 'Saldo Pinjaman', 
+        'Saldo Simpanan', 'Saldo Simpanan Pokok', 'No Rekening', 'Kode',
+        'Jabatan', 'TTL', 'Jalan/Kp', 'Rt/Rw', 'Desa', 'Kec', 'Kode Pos',
+        'Jenis Kelamin', 'Kontak', 'Tgl Mendaftar', 'Lama Keanggotaan'
+    ]
+
+    df = pd.read_excel(os.getenv('LAPORAN_KEUANGAN_PATH'), sheet_name='Data Anggota', skiprows=6, nrows=451, usecols='B:T', names=columns, dtype={'NIK':str, 'Kontak':str, 'No Rekening':str})
+    df['Kontak'] = df['Kontak'].fillna('') # Menghapus field yang kosong bedasarkan kontak
+    df['NIK'] = df['NIK'].fillna('')
+    filtered_df = df[df['Kode'] == text]['Nama'].to_string()
+    return re.sub(r"^[0-9]+|^\s+", "", filtered_df).lstrip()
