@@ -2,9 +2,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
-
-from transaction.helper import find_barcode_by_item_name
-
 class BankInTransaction:
     def __init__(self, driver, wait):
         '''driver: Driver chrome yang akan dijalankan
