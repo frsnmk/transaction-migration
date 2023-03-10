@@ -9,6 +9,7 @@ from datasource.ppob import PPOB
 from datasource.bank_in import BankIn
 from datasource.cash_in import CashIn
 from datasource.bank_out import BankOut
+from datasource.cash_out import CashOut
 
 from database.employee import Employee
 from database.item import Item
@@ -22,6 +23,7 @@ from transaction.ppob_transaction import PPOBTransaction
 from transaction.bank_in import BankInTransaction
 from transaction.cash_in import CashInTransaction
 from transaction.bank_out import BankOutTransaction
+from transaction.cash_out_transaction import CashOutTransaction
 
 load_dotenv()
 
@@ -37,12 +39,13 @@ ppob =  PPOB(path).data_ppob()
 bank_in = BankIn(path).data_bank_in()
 cash_in = CashIn(path).data_cash_in()
 bank_out = BankOut(path).data_bank_out()
+cash_out = CashOut(path).data_cash_out()
 
-merged_data = pd.concat([sellings, purchases, ppob, bank_in, cash_in, bank_out])
+merged_data = pd.concat([sellings, purchases, ppob, bank_in, cash_in, bank_out, cash_out])
 merged_data = merged_data.sort_values('Tanggal', ascending=True)
 bot = Transaction()
 
-for i, row in bank_out.iterrows():
+for i, row in cash_out.iterrows():
     if row['Kategori Transaksi'] == 'Penjualan':
         SellingTransaction(bot.driver, bot.wait).selling_transaction(row['Tanggal'], row['Nomor'], most_similar_word(nama_anggota(row['Pelanggan']), employees_name, 65), row['Jenis Barang'], row['Harga'], row['Kuantum'], items)
     if row['Kategori Transaksi'] == 'Pembelian':
@@ -175,4 +178,55 @@ for i, row in bank_out.iterrows():
         if(not pd.isna(row['Simpanan PMP'])):
             BankOutTransaction(bot.driver, bot.wait).simpanan(row['Keterangan'], member_name_adjusment(nama_anggota(row['Nama Anggota']), employees_name), int(row['Simpanan PMP']), "Simpanan wajib dan sukarela karyawan PMP", row['Tanggal'])
 
-    
+    if row['Kategori Transaksi'] == 'Kas Keluar':
+        if(not pd.isna(row["Pengalihan Kas"])):
+            if(row["Keterangan"].__contains__('Pengalihan kas ke rek bank')): # make sure lagi untuk yang akan melakukan pengalihan kas
+                CashOutTransaction(bot.driver, bot.wait).pengalihan_kas(row["Keterangan"], row["Nama Anggota"], int(row["Pengalihan Kas"]), "Buku kas", row["Tanggal"])
+        # Pengajulan Pinjaman cash out
+        if(not pd.isna(row['Pinjaman Gudang'])):
+            CashOutTransaction(bot.driver, bot.wait).pinjaman_cash(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pinjaman Gudang']), "Pinjaman karyawan Feedmill", row['Tanggal'])
+        if(not pd.isna(row['Pinjaman Farm'])):
+            CashOutTransaction(bot.driver, bot.wait).pinjaman_cash(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pinjaman Farm']), "Pinjaman karyawan Feedmill", row['Tanggal'])
+        if(not pd.isna(row['Pinjaman Security'])):
+            CashOutTransaction(bot.driver, bot.wait).pinjaman_cash(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pinjaman Security']), "Pinjaman karyawan Feedmill", row['Tanggal'])
+        if(not pd.isna(row['Pinjaman CAM'])):
+            CashOutTransaction(bot.driver, bot.wait).pinjaman_cash(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pinjaman CAM']), "Pinjaman karyawan Feedmill", row['Tanggal'])
+        if(not pd.isna(row['Pinjaman PWM'])):
+            CashOutTransaction(bot.driver, bot.wait).pinjaman_cash(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pinjaman PWM']), "Pinjaman karyawan Feedmill", row['Tanggal'])
+        if(not pd.isna(row['Pinjaman PMP'])):
+            CashOutTransaction(bot.driver, bot.wait).pinjaman_cash(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pinjaman PMP']), "Pinjaman karyawan Feedmill", row['Tanggal'])
+
+        # Pengambilan simpanan
+        if(not pd.isna(row['Pengambilan Simpanan Gudang'])):
+            CashOutTransaction(bot.driver, bot.wait).pengambilan_simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pengambilan Simpanan Gudang']), "Simpanan wajib dan sukarela karyawan Gudang", row['Tanggal'])
+        if(not pd.isna(row['Pengambilan Simpanan Farm'])):
+            CashOutTransaction(bot.driver, bot.wait).pengambilan_simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pengambilan Simpanan Farm']), "Simpanan wajib dan sukarela karyawan Farm", row['Tanggal'])
+        if(not pd.isna(row['Pengambilan Simpanan Security'])):
+            CashOutTransaction(bot.driver, bot.wait).pengambilan_simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pengambilan Simpanan Security']), "Simpanan wajib dan sukarela karyawan Security dan Pupuk", row['Tanggal'])
+        if(not pd.isna(row['Pengambilan Simpanan CAM'])):
+            CashOutTransaction(bot.driver, bot.wait).pengambilan_simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pengambilan Simpanan CAM']), "Simpanan wajib dan sukarela karyawan CAM", row['Tanggal'])
+        if(not pd.isna(row['Pengambilan Simpanan PWM'])):
+            CashOutTransaction(bot.driver, bot.wait).pengambilan_simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pengambilan Simpanan PWM']), "Simpanan wajib dan sukarela karyawan PWM", row['Tanggal'])
+        if(not pd.isna(row['Pengambilan Simpanan PMP'])):
+            CashOutTransaction(bot.driver, bot.wait).pengambilan_simpanan(row['Keterangan'], find_employe_name_by_code(row['Nama Anggota']), int(row['Pengambilan Simpanan PMP']), "Simpanan wajib dan sukarela karyawan PMP", row['Tanggal'])
+        
+        # Gaji
+        if(not pd.isna(row['Gaji'])):
+            CashOutTransaction(bot.driver, bot.wait).non_division_account_cash_out(row['Keterangan'], row['Nama Anggota'], int(row['Gaji']), "Gaji Manajemen", row['Tanggal'])
+        # Hutang usaha
+        if(not pd.isna(row['Hutang Usaha'])):
+            if row['Keterangan'].__contains__('Pembayaran hutang usaha'):
+                CashOutTransaction(bot.driver, bot.wait).hutang_usaha_kas(row['Keterangan'], most_similar_word(row['Nama Anggota'], supplier_name), int(row['Hutang Usaha']), "Hutang Usaha", row['Tanggal'])
+        # ATK
+        if(not pd.isna(row['ATK'])):
+            CashOutTransaction(bot.driver, bot.wait).non_division_account_cash_out(row['Keterangan'], row['Nama Anggota'], int(row['ATK']), "Biaya Alat Tulis Kantor", row['Tanggal'])
+
+        # Operasional
+        if(not pd.isna(row['Operasional'])):
+            if row['Nama Anggota'].__contains__('Operasional'):
+                CashOutTransaction(bot.driver, bot.wait).non_division_account_cash_out(row['Keterangan'], row['Nama Anggota'], int(row['Operasional']), "Biaya Serba-Serbi", row['Tanggal'])
+        
+        # Lain-lain
+        if(not pd.isna(row['Lain-lain'])):
+            if row['Nama Anggota'].__contains__('Bahan Pembantu'): # Pembelian bahan pembantu 
+                CashOutTransaction(bot.driver, bot.wait).non_division_account_cash_out(row['Keterangan'], row['Nama Anggota'], int(row['Lain-lain']), "Pembelian bahan pembantu", row['Tanggal'])
