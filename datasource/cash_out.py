@@ -1,9 +1,4 @@
 import pandas as pd
-from dotenv import load_dotenv
-import os
-load_dotenv()
-
-path = os.getenv('LAPORAN_KEUANGAN_PATH')
 
 class CashOut:
 
@@ -26,6 +21,3 @@ class CashOut:
         df['Tanggal'] = df['Tanggal'].dt.strftime('%Y-%m-%d %H:%M')
         df['Kategori Transaksi'] = 'Kas Keluar'
         return df
-
-a = CashOut(path).data_cash_out()
-a.to_excel('cash_out.xlsx')

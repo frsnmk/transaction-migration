@@ -45,7 +45,7 @@ merged_data = pd.concat([sellings, purchases, ppob, bank_in, cash_in, bank_out, 
 merged_data = merged_data.sort_values('Tanggal', ascending=True)
 bot = Transaction()
 
-for i, row in cash_out.iterrows():
+for i, row in merged_data.iterrows():
     if row['Kategori Transaksi'] == 'Penjualan':
         SellingTransaction(bot.driver, bot.wait).selling_transaction(row['Tanggal'], row['Nomor'], most_similar_word(nama_anggota(row['Pelanggan']), employees_name, 65), row['Jenis Barang'], row['Harga'], row['Kuantum'], items)
     if row['Kategori Transaksi'] == 'Pembelian':
