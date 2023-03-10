@@ -1,5 +1,8 @@
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+
+from rapidfuzz import fuzz as rfuzz, process as rprocess
+
 import pandas as pd
 import os
 import re
@@ -45,7 +48,11 @@ def nama_anggota(text):
     return text[1].strip()
 
 
-def supplier_name_adjustment(supplier):
+def supplier_name_adjustment(supplier, suppliers=''):
+    if suppliers:
+        res = rprocess.extractOne(supplier, suppliers, score_cutoff=90)
+        if res:
+            return res[0]
     if supplier == 'Yans Mart':
         return 'Yan Mart'
     elif supplier == 'BP.YAYAN':
@@ -54,8 +61,22 @@ def supplier_name_adjustment(supplier):
         return 'Yan Mart'
     elif supplier == 'DAFMART':
         return 'Yan Mart'
+    elif supplier == 'CAM':
+        return 'PT Cianjur Arta Makmur (CAM)'
+    elif supplier == 'WMS':
+        return 'PT Widodofood Makmur Sejahtera'
+    elif supplier == 'WMU':
+        return 'Widodo Makmur Unggas'
     else:
         raise "Data tidak supplier tidak tersedia"
+
+def member_name_adjusment(name, names):
+    if names:
+        res = rprocess.extractOne(name, names)
+        if res:
+            return res[0]
+    else:
+        raise "Nama anggota tidak tidak tersedia"
 
 def find_employe_name_by_code(text):
     columns = [
@@ -70,3 +91,9 @@ def find_employe_name_by_code(text):
     df['NIK'] = df['NIK'].fillna('')
     filtered_df = df[df['Kode'] == text]['Nama'].to_string()
     return re.sub(r"^[0-9]+|^\s+", "", filtered_df).lstrip()
+
+def find_angsuran(text):
+    match = re.search(r'\d+', text)
+    return match.group()
+
+

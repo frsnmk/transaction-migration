@@ -1,10 +1,5 @@
 import pandas as pd
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
-
-path = os.getenv('LAPORAN_KEUANGAN_PATH')
 class BankIn:
 
     def __init__(self, path:str, columns:list = [
